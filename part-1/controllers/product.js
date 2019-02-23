@@ -15,36 +15,55 @@ function parseBody (body) {
   try {
     return JSON.parse(bodyValueStringified)
   } catch (e) {
-    return bodyValueStringified
+    return new String(bodyValueStringified)
   }
 }
 
-module.exports = {
-  new: async function newProduct (req, res) {
-    let product = new Product()
-    const dados = parseBody(req.body)
+function constructor (req) {
+  let product = new Product()
+  const dados = parseBody(req.body)
 
-    product.body = dados
-    product.md5 = hash(dados, {algorithm: 'md5'})
+  product.body = dados
+  product.md5 = hash(dados, {algorithm: 'md5'})
 
-    const lastProductAddedWithMD5 = await retrieveProductByMD5(product.md5)
-    
-    if (lastProductAddedWithMD5.length > 0) {
-      const dateDiff = Date.now() - lastProductAddedWithMD5[0].created_at
-      const minutesInDateDiff = Math.floor(dateDiff / MILLISECONDS_TO_MINUTES_DIVISOR);
-      
-      if (minutesInDateDiff < 10) {
-        res.status(403).send()
-        return
-      }
+  return product
+}
+
+function save(product, response) {
+  product.save((err) => {
+    if (err) {
+      response.status(500).send()
+      return true
+    } else {
+      response.status(200).send()
+      return false
     }
+  })
+}
 
-    product.save((err) => {
-      if (err) {
-        res.status(500).send()
-      } else {
-        res.status(200).send()
-      }
-    })
+function minutesInDateDiff(lastProductTimestamp) {
+  const dateDiff = Date.now() - lastProductTimestamp
+  return Math.floor(dateDiff / MILLISECONDS_TO_MINUTES_DIVISOR);
+}
+
+async function newProduct (req, res) {
+  let product = this.constructor(req)
+
+  const lastProductAddedWithMD5 = await this.retrieveProductByMD5(product.md5)
+  
+  if (lastProductAddedWithMD5.length > 0 && this.minutesInDateDiff(lastProductAddedWithMD5[0].created_at) < 10) {
+    res.status(403).send()
+    return
   }
+  console.log(this)
+  this.save(product, res)
+}
+
+module.exports = {
+  constructor: constructor,
+  retrieveProductByMD5: retrieveProductByMD5,
+  parseBody: parseBody,
+  save: save,
+  minutesInDateDiff: minutesInDateDiff,
+  new: newProduct
 }
