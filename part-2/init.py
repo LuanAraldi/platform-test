@@ -6,5 +6,5 @@ parser = argparse.ArgumentParser()
 parser.add_argument('dump', help='Dump file path')
 args = parser.parse_args()
 
-checker.check(args.dump)
-aggregator.aggregate()
+aggregator.aggregate(args.dump)
+checker.check('./aggregator.json')

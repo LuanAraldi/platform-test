@@ -41,8 +41,8 @@ function save(product, response) {
   })
 }
 
-function minutesInDateDiff(lastProductTimestamp) {
-  const dateDiff = Date.now() - lastProductTimestamp
+function minutesInDateDiff(now, lastProductTimestamp) {
+  const dateDiff = now - lastProductTimestamp
   return Math.floor(dateDiff / MILLISECONDS_TO_MINUTES_DIVISOR);
 }
 
@@ -51,12 +51,12 @@ async function newProduct (req, res) {
 
   const lastProductAddedWithMD5 = await this.retrieveProductByMD5(product.md5)
   
-  if (lastProductAddedWithMD5.length > 0 && this.minutesInDateDiff(lastProductAddedWithMD5[0].created_at) < 10) {
+  if (lastProductAddedWithMD5.length > 0 && this.minutesInDateDiff(Date.now() ,lastProductAddedWithMD5[0].created_at) < 10) {
     res.status(403).send()
-    return
+    return false
   }
-  console.log(this)
   this.save(product, res)
+  return true
 }
 
 module.exports = {

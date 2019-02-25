@@ -34,23 +34,62 @@ describe('Product controller test', () => {
   })
 
   describe('constructor method testing', () => {
+    test('Should have a body property with request body inputs', () => {
+      const req = {
+        body : { 
+          '{"id": "1234", "name": "mesa"}': '' 
+        }
+      }
+      const expectedOutput = {
+        body:{
+          id: '1234',
+          name: 'mesa'
+        }
+      }
+      const constructedProduct = product.constructor(req)
+      expect(constructedProduct).toBeDefined()
+      expect(constructedProduct).toBeInstanceOf(Object)
+      expect(constructedProduct).toMatchObject(expectedOutput)
+    })
 
-  })
-
-  describe('retrieveProductByMD5 method testing', () => {
-    
+    test('Should have a md5 property made with request body inputs', () => {
+      const req = {
+        body : { 
+          '{"id": "1234", "name": "mesa"}': '' 
+        }
+      }
+      const expectedOutput = {
+        md5: '58e2da437fc12b3ff992d93fd8b7e09d'
+      }
+      const constructedProduct = product.constructor(req)
+      expect(constructedProduct).toBeDefined()
+      expect(constructedProduct).toBeInstanceOf(Object)
+      expect(constructedProduct).toMatchObject(expectedOutput)
+    })
   })
 
   describe('save method testing', () => {
-    
+    test('Use mocked save method to save product', () =>{
+      const req = {
+        body : { 
+          '{"id": "1234", "name": "mesa"}': '' 
+        }
+      }
+      const constructedProduct = product.constructor(req)
+      const savedProduct = product.save(constructedProduct)
+      expect(savedProduct).toBeDefined()
+      expect(savedProduct).toBeTruthy()
+    })
   })
 
   describe('minutesInDateDiff method testing', () => {
-    
-  })
+    test('Difference beetween two dates need to be 5 minutes', () => {
+      const actualDate = new Date(1551044570259)
+      const fiveMinutesEarly = new Date(1551044570259 - (60000 * 5))
 
-  describe('newProduct method testing', () => {
-    
+      const dateDiff = product.minutesInDateDiff(actualDate, fiveMinutesEarly)
+      expect(dateDiff).toBeDefined()
+      expect(dateDiff).toBe(5)
+    })
   })
-
 })
