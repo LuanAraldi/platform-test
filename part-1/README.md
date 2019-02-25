@@ -6,6 +6,10 @@ It was built using Node.js because of its good performance with IO interactions.
 
 As a database, it was chosen MongoDB, for its good relationship with Node.js technologies and because it's a NoSQL alternative
 
+## Prerequisites
+- [Docker]{https://docs.docker.com/install/}
+- [Docker Compose]{https://docs.docker.com/compose/install/}
+
 ## Running tests
 
 There is a specially created compose file (to make things easier) for testing purposes, look below to see how to run it
