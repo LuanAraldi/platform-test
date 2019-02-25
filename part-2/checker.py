@@ -16,7 +16,7 @@ def image_exists(product):
 
 def check(dump):
     dump_out = open('./dump.json', 'w+')
-    with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=300) as executor:
         future_to_url = {executor.submit(image_exists, prd): prd for prd in open(dump, 'r')}
         for future in concurrent.futures.as_completed(future_to_url):
             product = future.result()

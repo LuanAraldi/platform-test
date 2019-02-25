@@ -6,7 +6,7 @@ const app = express()
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({ extended: true }))
 
-mongoose.connect('mongodb://localhost:27017/platform')
+mongoose.connect(`mongodb://${process.env.MONGO_IP}:27017/platform`)
 
 const userRoute = require('./routes/product')
 
