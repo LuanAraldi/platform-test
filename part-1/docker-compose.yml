@@ -1,13 +1,18 @@
-version: '2'
+version: '3'
 services:
   web:
-    build: ./
-    ports:
-      - 80:8080
+    image: 127.0.0.1:5000/stackplat
+    build: .
     environment:
-      - MONGO_IP=172.17.0.2
+      - MONGO_IP=192.168.0.2
     command: npm run start
-
+    ports:
+      - "3000:3000"
+    networks:
+      - dockernet
+  redis:
+    image: redis:alpine
 networks:
-  default:
-    driver: bridge
+    dockernet:
+      external:
+        name: dockernet
