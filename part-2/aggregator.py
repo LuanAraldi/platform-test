@@ -1,4 +1,8 @@
 import json
+import tarfile
+import codecs
+
+utf8reader = codecs.getreader('utf-8')
 
 def format_product(productId, images):
     return {
@@ -7,9 +11,14 @@ def format_product(productId, images):
     }
 
 def aggregate(dump):
-    dump_out = open(dump, 'r')
+    print(dump)
+    tar = tarfile.open(dump,encoding='utf-8')
+    extracted_tar = tar.extractfile(tar.getmembers()[0])
+    dump_extracted = open('extracted.json', 'w+').write(utf8reader(extracted_tar).read())
+    
     products = {}
-    for line in dump_out:
+    #print(extracted_tar.read())
+    for line in open('extracted.json'):
         product = json.loads(line)
         productId = product.get('productId', None)
         if products.get(productId):
