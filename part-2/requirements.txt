@@ -1,2 +1,2 @@
 requests==2.21.0
-httpretty==0.9.6
+requests-mock==1.5.2
